@@ -259,6 +259,10 @@ class Roofline:
                             ),
                             (
                                 None
+                                if self.__run_parameters["is_standalone"]
+                                else "{} GB/s".format(
+                                    to_int(self.__ceiling_data[cache_level.lower()][2])
+                                )
                             ),
                         ],
                         textposition="top right",
@@ -275,11 +279,15 @@ class Roofline:
                         y=self.__ceiling_data["valu"][1],
                         name="Peak VALU-{}".format(dtype),
                         mode=plot_mode,
-                        line=dict(dash='dash', color="#000000"),
+                        line=dict(dash='solid'),
                         hovertemplate="<b>%{text}</b>",
                         text=[
                             (
                                 None
+                                if self.__run_parameters["is_standalone"]
+                                else "{} GFLOP/s".format(
+                                    to_int(self.__ceiling_data["valu"][2])
+                                )
                             ),
                             "{} GFLOP/s".format(to_int(self.__ceiling_data["valu"][2])),
                         ],
@@ -300,11 +308,13 @@ class Roofline:
                     y=self.__ceiling_data["mfma"][1],
                     name="Peak MFMA-{}".format(dtype),
                     mode=plot_mode,
-                    line=dict(dash='dashdot', color="#000000"),
+                    line=dict(dash='solid'),
                     hovertemplate="<b>%{text}</b>",
                     text=[
                         (
                             None
+                            if self.__run_parameters["is_standalone"]
+                            else "{} GFLOP/s".format(to_int(self.__ceiling_data["mfma"][2]))
                         ),
                         "{} GFLOP/s".format(to_int(self.__ceiling_data["mfma"][2])),
                     ],
