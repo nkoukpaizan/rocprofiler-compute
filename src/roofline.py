@@ -229,7 +229,7 @@ class Roofline:
         # Plot ceilings
         #######################
         if self.__run_parameters["mem_level"] == "ALL":
-            cache_hierarchy = ["HBM", "L2", "L1"] #, "LDS"] # NKK: Ignore LDS as it messes up the colors and we don't have data points for it.
+            cache_hierarchy = ["HBM", "L2", "L1", "LDS"]
         else:
             cache_hierarchy = self.__run_parameters["mem_level"]
 
