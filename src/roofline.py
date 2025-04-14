@@ -279,7 +279,7 @@ class Roofline:
                         y=self.__ceiling_data["valu"][1],
                         name="Peak VALU-{}".format(dtype),
                         mode=plot_mode,
-                        line=dict(dash='solid'),
+                        line=dict(dash='dashed', color="#000000"),
                         hovertemplate="<b>%{text}</b>",
                         text=[
                             (
@@ -308,7 +308,7 @@ class Roofline:
                     y=self.__ceiling_data["mfma"][1],
                     name="Peak MFMA-{}".format(dtype),
                     mode=plot_mode,
-                    line=dict(dash='solid'),
+                    line=dict(dash='dashdot', color="#000000"),
                     hovertemplate="<b>%{text}</b>",
                     text=[
                         (
