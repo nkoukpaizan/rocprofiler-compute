@@ -354,6 +354,7 @@ class Roofline:
             yaxis_title="Performance (GFLOP/sec)",
             hovermode="x unified",
             margin=dict(l=50, r=50, b=50, t=50, pad=4),
+            font=dict(size=20),
         )
         fig.update_xaxes(type="log", autorange=True)
         fig.update_yaxes(type="log", autorange=True)
