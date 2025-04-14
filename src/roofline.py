@@ -56,7 +56,7 @@ class Roofline:
                 "device_id": 0,
                 "sort_type": "kernels",
                 "mem_level": "ALL",
-                "include_kernel_names": True,
+                "include_kernel_names": False,
                 "is_standalone": False,
             }
         )
