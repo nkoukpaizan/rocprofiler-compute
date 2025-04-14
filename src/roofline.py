@@ -137,7 +137,7 @@ class Roofline:
                 x=[0] * 10,
                 y=self.__ai_data["kernelNames"],
                 marker_symbol=SYMBOLS,
-                marker_size=15,
+                marker_size=10,
             )
         )
         self.__figure.update_layout(
@@ -251,7 +251,7 @@ class Roofline:
                         y=self.__ceiling_data[cache_level.lower()][1],
                         name="{}-{}".format(cache_level, dtype),
                         mode=plot_mode,
-                        line=dict(color=my_color),
+                        line=dict(color=my_color, width=3.0),
                         hovertemplate="<b>%{text}</b>",
                         text=[
                             "{} GB/s".format(
@@ -278,7 +278,7 @@ class Roofline:
                     y=self.__ceiling_data["valu"][1],
                     name="Peak VALU-{}".format(dtype),
                     mode=plot_mode,
-                    line=dict(dash='solid'),
+                        line=dict(dash='solid', width=3.0),
                     hovertemplate="<b>%{text}</b>",
                     text=[
                         (
@@ -307,7 +307,7 @@ class Roofline:
                     y=self.__ceiling_data["mfma"][1],
                     name="Peak MFMA-{}".format(dtype),
                     mode=plot_mode,
-                    line=dict(dash='solid'),
+                    line=dict(dash='solid', width=3.0),
                     hovertemplate="<b>%{text}</b>",
                     text=[
                         (
@@ -334,9 +334,8 @@ class Roofline:
                     name="ai_l1",
                     mode="markers",
                     marker={"color": "#00CC96"},
-                    marker_symbol=(
-                        SYMBOLS
-                    ),
+                    marker_symbol=SYMBOLS,
+                    marker_size=10,
                 )
             )
             fig.add_trace(
@@ -346,9 +345,8 @@ class Roofline:
                     name="ai_l2",
                     mode="markers",
                     marker={"color": "#EF553B"},
-                    marker_symbol=(
-                        SYMBOLS
-                    ),
+                    marker_symbol=SYMBOLS,
+                    marker_size=10,
                 )
             )
             fig.add_trace(
@@ -358,9 +356,8 @@ class Roofline:
                     name="ai_hbm",
                     mode="markers",
                     marker={"color": "#636EFA"},
-                    marker_symbol=(
-                        SYMBOLS
-                    ),
+                    marker_symbol=SYMBOLS,
+                    marker_size=10,
                 )
             )
 
@@ -401,7 +398,7 @@ class Roofline:
             yaxis_title="Performance (GFLOP/sec)",
             hovermode="x unified",
             margin=dict(l=50, r=50, b=50, t=50, pad=4),
-            font=dict(size=20),
+            font=dict(size=24),
             template="plotly_white",
         )
         fig.update_xaxes(type="log", autorange=True)
