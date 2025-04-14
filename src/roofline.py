@@ -271,29 +271,28 @@ class Roofline:
 
         # Plot peak VALU ceiling
         # VALU info I8/FP16 not collected via microbench
-        if dtype != "I8" and dtype != "FP64":
-            if dtype != "FP16" and dtype != "I8":
-                fig.add_trace(
-                    go.Scatter(
-                        x=self.__ceiling_data["valu"][0],
-                        y=self.__ceiling_data["valu"][1],
-                        name="Peak VALU-{}".format(dtype),
-                        mode=plot_mode,
-                        line=dict(dash='solid'),
-                        hovertemplate="<b>%{text}</b>",
-                        text=[
-                            (
-                                None
-                                if self.__run_parameters["is_standalone"]
-                                else "{} GFLOP/s".format(
-                                    to_int(self.__ceiling_data["valu"][2])
-                                )
-                            ),
-                            "{} GFLOP/s".format(to_int(self.__ceiling_data["valu"][2])),
-                        ],
-                        textposition="top left",
-                    )
+        if dtype != "FP16" and dtype != "I8" and dtype != "FP64":
+            fig.add_trace(
+                go.Scatter(
+                    x=self.__ceiling_data["valu"][0],
+                    y=self.__ceiling_data["valu"][1],
+                    name="Peak VALU-{}".format(dtype),
+                    mode=plot_mode,
+                    line=dict(dash='solid'),
+                    hovertemplate="<b>%{text}</b>",
+                    text=[
+                        (
+                            None
+                            if self.__run_parameters["is_standalone"]
+                            else "{} GFLOP/s".format(
+                                to_int(self.__ceiling_data["valu"][2])
+                            )
+                        ),
+                        "{} GFLOP/s".format(to_int(self.__ceiling_data["valu"][2])),
+                    ],
+                    textposition="top left",
                 )
+            )
 
         if dtype == "FP16":
             pos = "bottom left"
@@ -301,7 +300,7 @@ class Roofline:
             pos = "top left"
 
         # Plot peak MFMA ceiling
-        if dtype != "I8" and dtype != "FP64":
+        if dtype != "FP64":
             fig.add_trace(
                 go.Scatter(
                     x=self.__ceiling_data["mfma"][0],
