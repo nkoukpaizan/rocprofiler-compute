@@ -120,15 +120,11 @@ class Roofline:
         console_debug(msg)
 
         # Generate a roofline figure for each data type
-        fp32_fig = self.generate_plot(dtype="FP32")
         ml_combo_fig_fp32_fp64 = self.generate_plot(
             dtype="FP64",
-            fig=fp32_fig,
         )
-        fp16_fig = self.generate_plot(dtype="FP16")
         ml_combo_fig_int8_fp16 = self.generate_plot(
             dtype="I8",
-            fig=fp16_fig,
         )
         # Create a legend and distinct kernel markers. This can be saved, optionally
         self.__figure = go.Figure(
@@ -230,17 +226,27 @@ class Roofline:
         #######################
         if self.__run_parameters["mem_level"] == "ALL":
             cache_hierarchy = ["HBM", "L2", "L1", "LDS"]
+            colors = ["#636EFA", "#EF553B", "#00CC96", "#FFBF00"]
         else:
             cache_hierarchy = self.__run_parameters["mem_level"]
+            if cache_hierarchy == "HBM":
+                colors = ["#636EFA"]
+            elif cache_hierarchy == "L2":
+                colors = ["#EF553B"]
+            elif cache_hierarchy == "L1":
+                colors = ["#00CC96"]
+            elif cache_hierarchy == "LDS":
+                colors = ["#FFBF00"]
 
         # Plot peak BW ceiling(s)
-        for cache_level in cache_hierarchy:
+        for cache_level, my_color in zip(cache_hierarchy, colors):
             fig.add_trace(
                 go.Scatter(
                     x=self.__ceiling_data[cache_level.lower()][0],
                     y=self.__ceiling_data[cache_level.lower()][1],
                     name="{}-{}".format(cache_level, dtype),
                     mode=plot_mode,
+                    line=dict(color=my_color),
                     hovertemplate="<b>%{text}</b>",
                     text=[
                         "{} GB/s".format(
@@ -267,6 +273,7 @@ class Roofline:
                     y=self.__ceiling_data["valu"][1],
                     name="Peak VALU-{}".format(dtype),
                     mode=plot_mode,
+                    line=dict(dash='solid'),
                     hovertemplate="<b>%{text}</b>",
                     text=[
                         (
@@ -293,6 +300,7 @@ class Roofline:
                 y=self.__ceiling_data["mfma"][1],
                 name="Peak MFMA-{}".format(dtype),
                 mode=plot_mode,
+                line=dict(dash='solid'),
                 hovertemplate="<b>%{text}</b>",
                 text=[
                     (
@@ -313,8 +321,8 @@ class Roofline:
             # Omitting I8 AIs to clean up graph. FP16 tends to be higher.
             fig.add_trace(
                 go.Scatter(
-                    x=self.__ai_data["ai_l1"][0],
-                    y=self.__ai_data["ai_l1"][1],
+                    x=self.__ai_data["L1-AI"][0],
+                    y=self.__ai_data["L1-AI"][1],
                     name="ai_l1",
                     mode="markers",
                     marker={"color": "#00CC96"},
@@ -325,8 +333,8 @@ class Roofline:
             )
             fig.add_trace(
                 go.Scatter(
-                    x=self.__ai_data["ai_l2"][0],
-                    y=self.__ai_data["ai_l2"][1],
+                    x=self.__ai_data["L2-AI"][0],
+                    y=self.__ai_data["L2-AI"][1],
                     name="ai_l2",
                     mode="markers",
                     marker={"color": "#EF553B"},
@@ -337,8 +345,8 @@ class Roofline:
             )
             fig.add_trace(
                 go.Scatter(
-                    x=self.__ai_data["ai_hbm"][0],
-                    y=self.__ai_data["ai_hbm"][1],
+                    x=self.__ai_data["HBM-AI"][0],
+                    y=self.__ai_data["HBM-AI"][1],
                     name="ai_hbm",
                     mode="markers",
                     marker={"color": "#636EFA"},
