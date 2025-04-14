@@ -120,11 +120,15 @@ class Roofline:
         console_debug(msg)
 
         # Generate a roofline figure for each data type
+        fp32_fig = self.generate_plot(dtype="FP32")
         ml_combo_fig_fp32_fp64 = self.generate_plot(
             dtype="FP64",
+            fig=fp32_fig,
         )
+        fp16_fig = self.generate_plot(dtype="FP16")
         ml_combo_fig_int8_fp16 = self.generate_plot(
             dtype="I8",
+            fig=fp16_fig,
         )
         # Create a legend and distinct kernel markers. This can be saved, optionally
         self.__figure = go.Figure(
@@ -239,39 +243,70 @@ class Roofline:
                 colors = ["#FFBF00"]
 
         # Plot peak BW ceiling(s)
-        for cache_level, my_color in zip(cache_hierarchy, colors):
-            fig.add_trace(
-                go.Scatter(
-                    x=self.__ceiling_data[cache_level.lower()][0],
-                    y=self.__ceiling_data[cache_level.lower()][1],
-                    name="{}-{}".format(cache_level, dtype),
-                    mode=plot_mode,
-                    line=dict(color=my_color),
-                    hovertemplate="<b>%{text}</b>",
-                    text=[
-                        "{} GB/s".format(
-                            to_int(self.__ceiling_data[cache_level.lower()][2])
-                        ),
-                        (
-                            None
-                            if self.__run_parameters["is_standalone"]
-                            else "{} GB/s".format(
+        if dtype != "I8" and dtype != "FP64":
+            for cache_level, my_color in zip(cache_hierarchy, colors):
+                fig.add_trace(
+                    go.Scatter(
+                        x=self.__ceiling_data[cache_level.lower()][0],
+                        y=self.__ceiling_data[cache_level.lower()][1],
+                        name="{}-{}".format(cache_level, dtype),
+                        mode=plot_mode,
+                        line=dict(color=my_color),
+                        hovertemplate="<b>%{text}</b>",
+                        text=[
+                            "{} GB/s".format(
                                 to_int(self.__ceiling_data[cache_level.lower()][2])
-                            )
-                        ),
-                    ],
-                    textposition="top right",
+                            ),
+                            (
+                                None
+                                if self.__run_parameters["is_standalone"]
+                                else "{} GB/s".format(
+                                    to_int(self.__ceiling_data[cache_level.lower()][2])
+                                )
+                            ),
+                        ],
+                        textposition="top right",
+                    )
                 )
-            )
 
         # Plot peak VALU ceiling
         # VALU info I8/FP16 not collected via microbench
-        if dtype != "FP16" and dtype != "I8":
+        if dtype != "I8" and dtype != "FP64":
+            if dtype != "FP16" and dtype != "I8":
+                fig.add_trace(
+                    go.Scatter(
+                        x=self.__ceiling_data["valu"][0],
+                        y=self.__ceiling_data["valu"][1],
+                        name="Peak VALU-{}".format(dtype),
+                        mode=plot_mode,
+                        line=dict(dash='solid'),
+                        hovertemplate="<b>%{text}</b>",
+                        text=[
+                            (
+                                None
+                                if self.__run_parameters["is_standalone"]
+                                else "{} GFLOP/s".format(
+                                    to_int(self.__ceiling_data["valu"][2])
+                                )
+                            ),
+                            "{} GFLOP/s".format(to_int(self.__ceiling_data["valu"][2])),
+                        ],
+                        textposition="top left",
+                    )
+                )
+
+        if dtype == "FP16":
+            pos = "bottom left"
+        else:
+            pos = "top left"
+
+        # Plot peak MFMA ceiling
+            if dtype != "I8" and dtype != "FP64":
             fig.add_trace(
                 go.Scatter(
-                    x=self.__ceiling_data["valu"][0],
-                    y=self.__ceiling_data["valu"][1],
-                    name="Peak VALU-{}".format(dtype),
+                    x=self.__ceiling_data["mfma"][0],
+                    y=self.__ceiling_data["mfma"][1],
+                    name="Peak MFMA-{}".format(dtype),
                     mode=plot_mode,
                     line=dict(dash='solid'),
                     hovertemplate="<b>%{text}</b>",
@@ -279,40 +314,14 @@ class Roofline:
                         (
                             None
                             if self.__run_parameters["is_standalone"]
-                            else "{} GFLOP/s".format(
-                                to_int(self.__ceiling_data["valu"][2])
-                            )
+                            else "{} GFLOP/s".format(to_int(self.__ceiling_data["mfma"][2]))
                         ),
-                        "{} GFLOP/s".format(to_int(self.__ceiling_data["valu"][2])),
+                        "{} GFLOP/s".format(to_int(self.__ceiling_data["mfma"][2])),
                     ],
-                    textposition="top left",
+                    textposition=pos,
                 )
             )
 
-        if dtype == "FP16":
-            pos = "bottom left"
-        else:
-            pos = "top left"
-        # Plot peak MFMA ceiling
-        fig.add_trace(
-            go.Scatter(
-                x=self.__ceiling_data["mfma"][0],
-                y=self.__ceiling_data["mfma"][1],
-                name="Peak MFMA-{}".format(dtype),
-                mode=plot_mode,
-                line=dict(dash='solid'),
-                hovertemplate="<b>%{text}</b>",
-                text=[
-                    (
-                        None
-                        if self.__run_parameters["is_standalone"]
-                        else "{} GFLOP/s".format(to_int(self.__ceiling_data["mfma"][2]))
-                    ),
-                    "{} GFLOP/s".format(to_int(self.__ceiling_data["mfma"][2])),
-                ],
-                textposition=pos,
-            )
-        )
         #######################
         # Plot Application AI
         #######################
@@ -321,8 +330,8 @@ class Roofline:
             # Omitting I8 AIs to clean up graph. FP16 tends to be higher.
             fig.add_trace(
                 go.Scatter(
-                    x=self.__ai_data["L1-AI"][0],
-                    y=self.__ai_data["L1-AI"][1],
+                    x=self.__ai_data["ai_l1"][0],
+                    y=self.__ai_data["ai_l1"][1],
                     name="ai_l1",
                     mode="markers",
                     marker={"color": "#00CC96"},
@@ -333,8 +342,8 @@ class Roofline:
             )
             fig.add_trace(
                 go.Scatter(
-                    x=self.__ai_data["L2-AI"][0],
-                    y=self.__ai_data["L2-AI"][1],
+                    x=self.__ai_data["ai_l2"][0],
+                    y=self.__ai_data["ai_l2"][1],
                     name="ai_l2",
                     mode="markers",
                     marker={"color": "#EF553B"},
@@ -345,8 +354,8 @@ class Roofline:
             )
             fig.add_trace(
                 go.Scatter(
-                    x=self.__ai_data["HBM-AI"][0],
-                    y=self.__ai_data["HBM-AI"][1],
+                    x=self.__ai_data["ai_hbm"][0],
+                    y=self.__ai_data["ai_hbm"][1],
                     name="ai_hbm",
                     mode="markers",
                     marker={"color": "#636EFA"},
