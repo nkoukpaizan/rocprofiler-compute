@@ -275,7 +275,7 @@ class Roofline:
                         y=self.__ceiling_data["valu"][1],
                         name="Peak VALU-{}".format(dtype),
                         mode=plot_mode,
-                        line=dict(dash='dashed', color="#000000"),
+                        line=dict(dash='dash', color="#000000"),
                         hovertemplate="<b>%{text}</b>",
                         text=[
                             (
