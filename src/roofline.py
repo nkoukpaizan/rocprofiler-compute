@@ -301,7 +301,7 @@ class Roofline:
             pos = "top left"
 
         # Plot peak MFMA ceiling
-            if dtype != "I8" and dtype != "FP64":
+        if dtype != "I8" and dtype != "FP64":
             fig.add_trace(
                 go.Scatter(
                     x=self.__ceiling_data["mfma"][0],
@@ -372,6 +372,7 @@ class Roofline:
             hovermode="x unified",
             margin=dict(l=50, r=50, b=50, t=50, pad=4),
             font=dict(size=20),
+            template="plotly_white",
         )
         fig.update_xaxes(type="log", autorange=True)
         fig.update_yaxes(type="log", autorange=True)
