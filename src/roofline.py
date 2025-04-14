@@ -259,10 +259,6 @@ class Roofline:
                             ),
                             (
                                 None
-                                if self.__run_parameters["is_standalone"]
-                                else "{} GB/s".format(
-                                    to_int(self.__ceiling_data[cache_level.lower()][2])
-                                )
                             ),
                         ],
                         textposition="top right",
@@ -284,10 +280,6 @@ class Roofline:
                         text=[
                             (
                                 None
-                                if self.__run_parameters["is_standalone"]
-                                else "{} GFLOP/s".format(
-                                    to_int(self.__ceiling_data["valu"][2])
-                                )
                             ),
                             "{} GFLOP/s".format(to_int(self.__ceiling_data["valu"][2])),
                         ],
@@ -313,8 +305,6 @@ class Roofline:
                     text=[
                         (
                             None
-                            if self.__run_parameters["is_standalone"]
-                            else "{} GFLOP/s".format(to_int(self.__ceiling_data["mfma"][2]))
                         ),
                         "{} GFLOP/s".format(to_int(self.__ceiling_data["mfma"][2])),
                     ],
