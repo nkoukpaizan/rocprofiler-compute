@@ -364,6 +364,37 @@ class Roofline:
                 )
             )
 
+        # Kernel annotations
+        fig.add_annotation(
+            x=10,
+            y=1000,
+            text="float rocblas_gemvt/rocblas_gemvn",
+        )
+
+        fig.add_annotation(
+            x=10,
+            y=450,
+            text="double rocblas_gemvt/rocblas_gemvn",
+        )
+
+        fig.add_annotation(
+            x=5,
+            y=250,
+            text="float symgs_sweep/simple_ell_spmv",
+        )
+
+        fig.add_annotation(
+            x=5,
+            y=175,
+            text="double symgs_sweep/simple_ell_spmv",
+        )
+
+        fig.add_annotation(
+            x=5,
+            y=155,
+            text="double fused_restrict_spmv",
+        )
+
         # Set layout
         fig.update_layout(
             xaxis_title="Arithmetic Intensity (FLOPs/Byte)",
