@@ -375,39 +375,6 @@ class Roofline:
         fig.update_xaxes(type="log", autorange=True)
         fig.update_yaxes(type="log", autorange=True)
 
-        # Kernel annotations
-        fig.add_annotation(
-            x=1.4,
-            y=math.log10(900),
-            text="float rocblas_gemvt/rocblas_gemvn",
-            font=dict(size=15),
-            showarrow=False,
-        )
-
-        fig.add_annotation(
-            x=1.15,
-            y=math.log10(450),
-            text="double rocblas_gemvt/rocblas_gemvn",
-            font=dict(size=15),
-            showarrow=False,
-        )
-
-        fig.add_annotation(
-            x=0.9,
-            y=math.log10(260),
-            text="float symgs_sweep/simple_ell_spmv",
-            font=dict(size=15),
-            showarrow=False,
-        )
-
-        fig.add_annotation(
-            x=0.77,
-            y=math.log10(157),
-            text="double symgs_sweep/simple_ell_spmv",
-            font=dict(size=15),
-            showarrow=False,
-        )
-
         return fig
 
     @demarcate
